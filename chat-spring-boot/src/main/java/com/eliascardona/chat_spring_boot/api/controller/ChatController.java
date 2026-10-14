@@ -36,7 +36,7 @@ public class ChatController {
     }
 
     @GetMapping("/verify-message")
-    public ResponseEntity<?> saveMessage(
+    public ResponseEntity<?> verifyMessage(
             @Validated @RequestParam String chatMessageId
     ) {
         try {

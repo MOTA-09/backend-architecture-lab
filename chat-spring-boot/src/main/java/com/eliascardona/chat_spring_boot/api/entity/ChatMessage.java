@@ -21,6 +21,9 @@ public class ChatMessage {
     @Column(nullable = false)
     private String messageContent;
 
+    @Column(name = "sender", nullable = false)
+    private String sender;
+
     @ColumnDefault("now()")
     @Column(name = "sent_at", nullable = false)
     private OffsetDateTime sentAt;

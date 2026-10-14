@@ -15,6 +15,7 @@ public class ChatDto {
     public static class SavedMessageResponse {
         private UUID chatMessageId;
         private String messageContent;
+        private String sender;
     }
 
     @Data
@@ -24,5 +25,6 @@ public class ChatDto {
     public static class VerifiedMessageResponse {
         private UUID chatMessageId;
         private String messageContent;
+        private String sender;
     }
 }
