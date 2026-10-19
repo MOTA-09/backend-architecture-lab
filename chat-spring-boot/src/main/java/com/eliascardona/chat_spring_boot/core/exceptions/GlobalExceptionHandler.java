@@ -15,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /** Global exception handler for API errors */
 @ControllerAdvice
@@ -85,6 +86,40 @@ public class GlobalExceptionHandler {
             "VALIDATION_ERROR",
             "Invalid input data",
             errors);
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  /** Handle parameter type mismatch errors (e.g. invalid UUID format) */
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ErrorResponse> handleTypeMismatch(
+      MethodArgumentTypeMismatchException ex) {
+    Map<String, String> details = new HashMap<>();
+    String paramName = ex.getName();
+    String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "válido";
+    details.put(paramName, "Valor inválido: '" + ex.getValue() + "'. Se esperaba formato " + expectedType);
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            "INVALID_PARAMETER",
+            "Parámetro de solicitud inválido",
+            details);
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  /** Handle illegal argument errors */
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+      IllegalArgumentException ex) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            "INVALID_ARGUMENT",
+            ex.getMessage());
 
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }

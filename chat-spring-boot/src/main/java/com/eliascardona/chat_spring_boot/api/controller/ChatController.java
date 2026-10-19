@@ -3,8 +3,8 @@ package com.eliascardona.chat_spring_boot.api.controller;
 import com.eliascardona.chat_spring_boot.api.command.NewChatMessageCommand;
 import com.eliascardona.chat_spring_boot.api.dto.ChatDto;
 import com.eliascardona.chat_spring_boot.api.service.ChatService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,32 +22,22 @@ public class ChatController {
     }
 
     @PostMapping("/save-message")
-    public ResponseEntity<?> saveMessage(
-        @Validated @RequestBody NewChatMessageCommand command
+    public ResponseEntity<ChatDto.SavedMessageResponse> saveMessage(
+        @Valid @RequestBody NewChatMessageCommand command
     ) {
-        try {
-            ChatDto.SavedMessageResponse response = chatService
-                    .saveChatMessage(command);
+        ChatDto.SavedMessageResponse response = chatService
+                .saveChatMessage(command);
 
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/verify-message")
-    public ResponseEntity<?> verifyMessage(
-            @Validated @RequestParam String chatMessageId
+    public ResponseEntity<ChatDto.VerifiedMessageResponse> verifyMessage(
+            @RequestParam UUID chatMessageId
     ) {
-        try {
-            UUID messageId = UUID.fromString(chatMessageId);
+        ChatDto.VerifiedMessageResponse response = chatService
+                .findChatMessageById(chatMessageId);
 
-            ChatDto.VerifiedMessageResponse response = chatService
-                    .findChatMessageById(messageId);
-
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
+        return ResponseEntity.ok(response);
     }
 }

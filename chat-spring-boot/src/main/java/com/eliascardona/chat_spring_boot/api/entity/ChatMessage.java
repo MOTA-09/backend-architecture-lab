@@ -18,7 +18,7 @@ public class ChatMessage {
     @Column(nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String messageContent;
 
     @Column(name = "sender", nullable = false)
