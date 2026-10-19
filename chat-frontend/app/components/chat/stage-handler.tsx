@@ -23,6 +23,11 @@ export function ChatViewHandler({
       return;
     }
 
+    if (message.length > 1000) {
+      toast.error('El mensaje no puede exceder los 1000 caracteres');
+      return;
+    }
+
     if (isBusy) {
       return;
     }

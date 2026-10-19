@@ -14,4 +14,5 @@ export type ServerActionResult<P> = {
   success: boolean;
   performedAction?: P;
   data?: any;
+  error?: string;
 };

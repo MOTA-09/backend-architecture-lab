@@ -46,10 +46,16 @@ export async function chatServerActionHandler(
         return { success: false };
     }
   } catch (error: any) {
+    const errorMessage =
+      error?.data?.details?.message ||
+      error?.data?.message ||
+      error?.message ||
+      'Error al procesar el mensaje';
+
     console.error(
       'Error performing chat messaging action:',
-      error.message || 'null'
+      errorMessage
     );
-    return { success: false };
+    return { success: false, error: errorMessage };
   }
 }

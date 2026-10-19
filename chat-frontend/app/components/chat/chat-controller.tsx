@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useActionData, useSubmit } from 'react-router';
+import { toast } from 'sonner';
 import { MessagingActionResponseEnum } from '~/lib/chat/response-types';
 import type { ChatState } from '~/lib/chat/stateMachineReducer';
 import type { AvailableUsername } from '~/lib/shared/types';
@@ -88,6 +89,20 @@ export function ChatController({ username }: { username: AvailableUsername }) {
    * --------------------------------------------------
    */
   useEffect(() => {
+    if (actionData && actionData.success === false) {
+      const errorMsg =
+        actionData.error || 'El servidor rechazó el mensaje enviado';
+      console.error('[CHAT] Server action returned error:', errorMsg);
+      toast.error(errorMsg);
+
+      setState((current) => ({
+        ...current,
+        phase: 'IDLE',
+        activeMessageId: null,
+      }));
+      return;
+    }
+
     if (!actionData?.success) {
       return;
     }
