@@ -21,7 +21,8 @@ public class ChatMessage {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String messageContent;
 
-    @Column(name = "sender", nullable = false)
+    @ColumnDefault("'Anónimo'")
+    @Column(name = "sender")
     private String sender;
 
     @ColumnDefault("now()")
